@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
+import * as core from "@actions/core";
 import fs from "fs";
+import path from 'path';
 
-const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-const TOP_N = Number(process.env.TOP_N || process.argv[2] || 5);
+const GITHUB_TOKEN = core.getInput("github_token") || process.env.GITHUB_TOKEN;
+const TOP_N = Number(core.getInput("top_n") || 5);
+const OUTPUT_PATH = core.getInput("output_path") || "profile/top-langs.svg";
 
 const COLORS = [
 	"#4F8EF7", // blue
@@ -159,11 +162,9 @@ async function main() {
 	const stats = computeTopLanguages(totals, TOP_N);
 	const svg = renderBarSVG(stats);
 
-	// save to file (for GitHub Actions later)
-	fs.writeFileSync("top-langs.svg", svg);
-
-	console.log("SVG file generated: top-langs.svg");
-	console.log(JSON.stringify(stats, null, 2));
+	fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
+	fs.writeFileSync(OUTPUT_PATH, svg);
+	console.log(`SVG generated at ${OUTPUT_PATH}`);
 }
 
 main().catch(err => {

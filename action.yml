@@ -1,0 +1,17 @@
+name: "Top languages SVG"
+description: "Generates a top languages SVG for your GitHub account"
+inputs:
+  github_token:
+    description: "GitHub token with repo access"
+    required: true
+  top_n:
+    description: "Number of top languages to show"
+    required: false
+    default: 5
+  output_path:
+    description: "Path to save the generated SVG"
+    required: false
+    default: "profile/top-langs.svg"
+runs:
+  using: "node20"
+  main: "index.js"
