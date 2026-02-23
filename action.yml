@@ -1,17 +1,30 @@
-name: "Top languages SVG"
-description: "Generates a top languages SVG for your GitHub account"
+name: Top Languages SVG
+description: Generate top languages SVG for a GitHub user
+
 inputs:
   github_token:
-    description: "GitHub token with repo access"
     required: true
+    description: "Repo token"
   top_n:
-    description: "Number of top languages to show"
     required: false
-    default: 5
+    default: "5"
+    description: "Number of languages"
   output_path:
-    description: "Path to save the generated SVG"
     required: false
     default: "profile/top-langs.svg"
+    description: "Where to output the SVG"
+
 runs:
-  using: "node20"
-  main: "index.js"
+  using: composite
+  steps:
+    - name: Install dependencies
+      run: npm ci
+      shell: bash
+
+    - name: Run generator
+      run: node index.js
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github_token }}
+        TOP_N: ${{ inputs.top_n }}
+        OUTPUT_PATH: ${{ inputs.output_path }}
