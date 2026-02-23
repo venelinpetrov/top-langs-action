@@ -8,15 +8,19 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN || core.getInput("github_token");
 const TOP_N = Number(process.env.TOP_N || core.getInput("top_n") || 5);
 const workspace = process.env.WORKSPACE || process.cwd();
 const outputPath = process.env.OUTPUT_PATH || 'profile/top-langs.svg'
-console.log(TOP_N, '<<<<<<<<topN')
+
 const COLORS = [
 	"#4F8EF7",
 	"#F7B32F",
 	"#F75F4F",
 	"#6FCF97",
 	"#9B51E0",
-	"#F2994A",
-	"#56CCF2",
+	"#834d1eff",
+	"#1e4a7eff",
+	"#f256d0ff",
+	"#d5f256ff",
+	"#332469ff",
+	"#f26856ff",
 ];
 
 if (!GITHUB_TOKEN) {
@@ -115,9 +119,14 @@ function computeTopLanguages(totals, topN) {
 	return result;
 }
 
-function renderBarSVG(stats, width = 600, barHeight = 40, legendItemHeight = 20, padding = 10, title = "Top Languages") {
+function renderBarSVG(stats, width = 600, barHeight = 12, legendItemHeight = 25, padding = 10, title = "Top Languages") {
 	const titleHeight = 20;
-	const svgHeight = titleHeight + padding + barHeight + stats.length * legendItemHeight + padding;
+	const numColumns = 2;
+	const colWidth = (width - (padding * 2)) / numColumns;
+
+	// Calculate how many rows we need (rounding up)
+	const rowCount = Math.ceil(stats.length / numColumns);
+	const svgHeight = titleHeight + (padding * 2) + barHeight + (rowCount * legendItemHeight) + padding;
 
 	let svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${svgHeight}">`;
 
@@ -128,29 +137,36 @@ function renderBarSVG(stats, width = 600, barHeight = 40, legendItemHeight = 20,
 	svg += `<text x="${width / 2}" y="${titleHeight}" font-family="monospace" font-size="16" fill="#fff" text-anchor="middle">${title}</text>`;
 
 	// Draw bar
-	let x = padding;
+	let xBar = padding;
 	const barWidth = width - padding * 2;
 	stats.forEach((stat, idx) => {
 		const sliceWidth = (stat.percent / 100) * barWidth;
 		const color = COLORS[idx % COLORS.length];
-		svg += `<rect x="${x}" y="${titleHeight + padding}" width="${sliceWidth}" height="${barHeight}" fill="${color}" />`;
-		x += sliceWidth;
+		svg += `<rect x="${xBar}" y="${titleHeight + padding}" width="${sliceWidth}" height="${barHeight}" fill="${color}" />`;
+		xBar += sliceWidth;
 	});
 
-	// Draw vertical legend
-	let legendY = titleHeight + padding + barHeight + padding;
+	// Draw two-column legend
+	const legendStartY = titleHeight + padding + barHeight + padding;
+
 	stats.forEach((stat, idx) => {
+		const col = idx % numColumns;
+		const row = Math.floor(idx / numColumns);
+
 		const color = COLORS[idx % COLORS.length];
-		const squareSize = 15;
-		const textX = padding + squareSize + 5;
-		const textY = legendY + squareSize - 3;
+		const squareSize = 12;
+
+		// Calculate X and Y based on column and row
+		const currentX = padding + (col * colWidth);
+		const currentY = legendStartY + (row * legendItemHeight);
+
+		const textX = currentX + squareSize + 8;
+		const textY = currentY + squareSize - 1;
 
 		// Color square
-		svg += `<rect x="${padding}" y="${legendY}" width="${squareSize}" height="${squareSize}" fill="${color}" />`;
+		svg += `<rect x="${currentX}" y="${currentY}" width="${squareSize}" height="${squareSize}" fill="${color}" />`;
 		// Text label
-		svg += `<text x="${textX}" y="${textY}" font-family="sans-serif" font-size="12" fill="#fff">${stat.language} ${stat.percent}%</text>`;
-
-		legendY += legendItemHeight;
+		svg += `<text x="${textX}" y="${textY}" font-family="monospace" font-size="12" fill="#fff">${stat.language} ${stat.percent}%</text>`;
 	});
 
 	svg += "</svg>";
