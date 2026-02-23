@@ -28,8 +28,7 @@ runs:
         node "$GITHUB_ACTION_PATH/index.js"
       shell: bash
       env:
-        GITHUB_TOKEN: ${{ inputs.github_token }}
         TOP_N: ${{ inputs.top_n }}
         OUTPUT_PATH: ${{ inputs.output_path }}
-        # Use the context variable specifically
+        GITHUB_TOKEN: ${{ inputs.github_token }}
         WORKSPACE: ${{ github.workspace }}

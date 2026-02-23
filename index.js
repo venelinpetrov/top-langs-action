@@ -4,11 +4,11 @@ import * as core from "@actions/core";
 import fs from "fs";
 import path from 'path';
 
-const GITHUB_TOKEN = core.getInput("github_token") || process.env.GITHUB_TOKEN;
-const TOP_N = Number(core.getInput("top_n") || 5);
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || core.getInput("github_token");
+const TOP_N = Number(process.env.TOP_N || core.getInput("top_n") || 5);
 const workspace = process.env.WORKSPACE || process.cwd();
 const outputPath = process.env.OUTPUT_PATH || 'profile/top-langs.svg'
-
+console.log(TOP_N, '<<<<<<<<topN')
 const COLORS = [
 	"#4F8EF7",
 	"#F7B32F",
@@ -159,7 +159,6 @@ function renderBarSVG(stats, width = 600, barHeight = 40, legendItemHeight = 20,
 
 async function main() {
 	const repos = await fetchLanguages();
-	console.log(repos);
 	const totals = aggregateLanguages(repos);
 	const stats = computeTopLanguages(totals, TOP_N);
 	const svg = renderBarSVG(stats);
