@@ -1,0 +1,9 @@
+{
+  "name": "top-langs-action",
+  "version": "1.0.0",
+  "type": "module",
+  "private": "true",
+  "author": "Venelin Petrov",
+  "license": "MIT",
+  "description": ""
+}
