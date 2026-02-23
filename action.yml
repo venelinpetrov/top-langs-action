@@ -1,5 +1,5 @@
 name: Top Languages SVG
-description: Generate top languages SVG for a GitHub user
+description: Generate top languages SVG
 
 inputs:
   github_token:
@@ -18,13 +18,18 @@ runs:
   using: composite
   steps:
     - name: Install dependencies
-      run: npm ci
+      run: |
+        cd "$GITHUB_ACTION_PATH"
+        npm ci
       shell: bash
 
     - name: Run generator
-      run: node index.js
+      run: |
+        node "$GITHUB_ACTION_PATH/index.js"
       shell: bash
       env:
         GITHUB_TOKEN: ${{ inputs.github_token }}
         TOP_N: ${{ inputs.top_n }}
         OUTPUT_PATH: ${{ inputs.output_path }}
+        # Use the context variable specifically
+        WORKSPACE: ${{ github.workspace }}

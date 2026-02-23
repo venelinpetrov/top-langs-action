@@ -6,16 +6,17 @@ import path from 'path';
 
 const GITHUB_TOKEN = core.getInput("github_token") || process.env.GITHUB_TOKEN;
 const TOP_N = Number(core.getInput("top_n") || 5);
-const OUTPUT_PATH = core.getInput("output_path") || "profile/top-langs.svg";
+const workspace = process.env.WORKSPACE || process.cwd();
+const outputPath = process.env.OUTPUT_PATH || 'profile/top-langs.svg'
 
 const COLORS = [
-	"#4F8EF7", // blue
-	"#F7B32F", // yellow
-	"#F75F4F", // red
-	"#6FCF97", // green
-	"#9B51E0", // purple
-	"#F2994A", // orange
-	"#56CCF2", // light blue
+	"#4F8EF7",
+	"#F7B32F",
+	"#F75F4F",
+	"#6FCF97",
+	"#9B51E0",
+	"#F2994A",
+	"#56CCF2",
 ];
 
 if (!GITHUB_TOKEN) {
@@ -158,13 +159,14 @@ function renderBarSVG(stats, width = 600, barHeight = 40, legendItemHeight = 20,
 
 async function main() {
 	const repos = await fetchLanguages();
+	console.log(repos);
 	const totals = aggregateLanguages(repos);
 	const stats = computeTopLanguages(totals, TOP_N);
 	const svg = renderBarSVG(stats);
+	const absoluteOutputPath = path.join(workspace, outputPath);
 
-	fs.mkdirSync(path.dirname(OUTPUT_PATH), { recursive: true });
-	fs.writeFileSync(OUTPUT_PATH, svg);
-	console.log(`SVG generated at ${OUTPUT_PATH}`);
+	fs.mkdirSync(path.dirname(absoluteOutputPath), { recursive: true });
+	fs.writeFileSync(absoluteOutputPath, svg);
 }
 
 main().catch(err => {
