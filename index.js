@@ -150,8 +150,8 @@ function renderBarSVG(stats, width = 600, barHeight = 12, legendItemHeight = 25,
 	const legendStartY = titleHeight + padding + barHeight + padding;
 
 	stats.forEach((stat, idx) => {
-		const col = idx % numColumns;
-		const row = Math.floor(idx / numColumns);
+		const col = Math.floor(idx / rowCount);
+		const row = idx % rowCount;
 
 		const color = COLORS[idx % COLORS.length];
 		const squareSize = 12;
