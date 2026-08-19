@@ -42,5 +42,8 @@ jobs:
 ```md
 ![Top languages](./profile/top-langs.svg)
 ```
+Example:  
+<img width="623" height="234" alt="image" src="https://github.com/user-attachments/assets/9fe82d4b-37a0-48a1-9048-842a1e8df35f" />
+
 
 5. Done!
