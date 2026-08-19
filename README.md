@@ -37,3 +37,10 @@ jobs:
           git commit -m "Update README cards" || exit 0
           git push
 ```
+4. This will generate an SVG at `profile/top-langs.svg`. You can then reference it in the `README.md` like this:
+
+```md
+![Top languages](./profile/top-langs.svg)
+```
+
+5. Done!
