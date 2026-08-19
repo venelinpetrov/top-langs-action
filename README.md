@@ -1,6 +1,6 @@
 # Setup
 
-1. Generate classic token. Go to `https://github.com/settings/tokens`
+1. Generate classic token. Go to `https://github.com/settings/tokens`. The only required permission is `repo.public_repo`.
 2. Add `GH_PAT` variable in `https://github.com/<username>/<username>/settings/secrets/actions`
 3. Add a workflow in `.github/workflows` in your repo
 
